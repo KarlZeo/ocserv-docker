@@ -34,7 +34,7 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: |
-                      ${{ secrets.DOCKERHUB_USERNAME }}/ocserv-alpine:latest
-                      ${{ secrets.DOCKERHUB_USERNAME }}/ocserv-alpine:1.5.0
+                      ${{ secrets.DOCKERHUB_USERNAME }}/ocserv-docker:latest
+                      ${{ secrets.DOCKERHUB_USERNAME }}/ocserv-docker:1.5.0
                   cache-from: type=gha
                   cache-to: type=gha,mode=max

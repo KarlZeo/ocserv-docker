@@ -1,7 +1,7 @@
 services:
   ocserv:
     build: .
-    container_name: ocserv-alpine-release
+    container_name: ocserv-docker-release
     privileged: true
     ports:
       - "443:443/tcp"
