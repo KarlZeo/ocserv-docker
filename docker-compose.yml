@@ -1,14 +1,15 @@
 services:
   ocserv:
     build: .
-    container_name: ocserv-docker-release
+    container_name: ocserv
     privileged: true
     ports:
-      - "443:443/tcp"
-      - "443:443/udp"
+      - "8443:8443/tcp" # <-- 宿主机和容器内部端口保持一致
+      - "8443:8443/udp" # <-- 宿主机和容器内部端口保持一致
     volumes:
       - ./config:/etc/ocserv
     environment:
-      - VPN_USER=myvpnuser # <-- 在这里输入你想设置的用户名
-      - VPN_PASSWORD=mypassword123 # <-- 在这里输入你想设置的密码
+      - VPN_PORT=8443 # <-- 【新增】通知 ocserv.conf 内部修改监听端口
+      - VPN_USER=myvpnuser
+      - VPN_PASSWORD=mypassword123
     restart: always
