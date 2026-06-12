@@ -9,14 +9,13 @@ RUN wget https://www.infradead.org/ocserv/download/ocserv-${OCSERV_VERSION}.tar.
     && meson setup build -Dprefix=/usr -Dsysconfdir=/etc -Dlocalstatedir=/var -Dradius=disabled -Dgssapi=disabled -Dpam=disabled \
     && ninja -C build \
     && DESTDIR=/install meson install -C build \
-    # 【新增】直接从当前的源代码目录中把样板配置拷到暂存区，重命名为模板文件
-    && mkdir -p /install/etc/ocserv \
-    && cp doc/sample.config /install/etc/ocserv/ocserv.conf.template
+    # 【核心修改】放到 /usr/share 下，绝对不会被宿主机的 volume 挂载盖住
+    && mkdir -p /install/usr/share/ocserv \
+    && cp doc/sample.config /install/usr/share/ocserv/ocserv.conf.template
 
 # ================= 第二阶段：纯净运行环境 =================
 FROM alpine:latest
 RUN apk add --no-cache gnutls libev readline libtasn1 libseccomp protobuf-c lz4-libs iptables nftables bash gnutls-utils iproute2
-# 这一步会顺便把 /etc/ocserv/ocserv.conf.template 一起带到运行环境中
 COPY --from=builder /install/usr /usr
 COPY --from=builder /install/etc /etc
 

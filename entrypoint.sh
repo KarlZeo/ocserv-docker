@@ -3,7 +3,8 @@ set -e
 
 CONFIG_DIR="/etc/ocserv"
 CONFIG_FILE="${CONFIG_DIR}/ocserv.conf"
-TEMPLATE_FILE="${CONFIG_DIR}/ocserv.conf.template"
+# 【核心修改】指向安全的、未被挂载隐藏的绝对路径
+TEMPLATE_FILE="/usr/share/ocserv/ocserv.conf.template"
 PASSWD_FILE="${CONFIG_DIR}/ocpasswd"
 
 VPN_PORT=${VPN_PORT:-443}
@@ -12,11 +13,10 @@ VPN_PORT=${VPN_PORT:-443}
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "⚠️ 未检测到配置文件，正在从本地源码模板生成..."
     
-    # 【修改点】不再使用 wget，直接从打包进去的源码模板拷贝
     if [ -f "$TEMPLATE_FILE" ]; then
         cp "$TEMPLATE_FILE" "$CONFIG_FILE"
     else
-        echo "❌ 严重错误：未在容器内找到源码配置模板！"
+        echo "❌ 严重错误：未在容器内找到源码配置模板！位置: $TEMPLATE_FILE"
         exit 1
     fi
     
