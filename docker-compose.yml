@@ -1,0 +1,14 @@
+services:
+  ocserv:
+    build: .
+    container_name: ocserv-alpine-release
+    privileged: true
+    ports:
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ./config:/etc/ocserv
+    environment:
+      - VPN_USER=myvpnuser # <-- 在这里输入你想设置的用户名
+      - VPN_PASSWORD=mypassword123 # <-- 在这里输入你想设置的密码
+    restart: always
