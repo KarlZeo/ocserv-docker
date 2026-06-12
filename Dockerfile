@@ -9,15 +9,16 @@ RUN wget https://www.infradead.org/ocserv/download/ocserv-${OCSERV_VERSION}.tar.
     && meson setup build -Dprefix=/usr -Dsysconfdir=/etc -Dlocalstatedir=/var -Dradius=disabled -Dgssapi=disabled -Dpam=disabled \
     && ninja -C build \
     && DESTDIR=/install meson install -C build \
-    # 【核心修改】放到 /usr/share 下，绝对不会被宿主机的 volume 挂载盖住
+    # 完美存放到 /usr/share/ocserv 目录下
     && mkdir -p /install/usr/share/ocserv \
     && cp doc/sample.config /install/usr/share/ocserv/ocserv.conf.template
 
 # ================= 第二阶段：纯净运行环境 =================
 FROM alpine:latest
 RUN apk add --no-cache gnutls libev readline libtasn1 libseccomp protobuf-c lz4-libs iptables nftables bash gnutls-utils iproute2
+
+# 【已修复】只搬运包含 bin, sbin, share 完整产物的 usr 目录
 COPY --from=builder /install/usr /usr
-COPY --from=builder /install/etc /etc
 
 RUN addgroup -S ocserv && adduser -S -G ocserv ocserv
 
